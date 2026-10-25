@@ -1,4 +1,4 @@
-import { Component, signal, computed } from '@angular/core';
+import { Component, signal, computed, effect } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
@@ -8,7 +8,6 @@ export interface Todo {
   done: boolean;
 }
 
-// Type pour les filtres possibles
 export type Filter = 'all' | 'active' | 'done';
 
 @Component({
@@ -25,13 +24,11 @@ export class App {
   newTodo = '';
   private nextId = 0;
 
-  // Nouveau signal : le filtre actif (valeur par défaut : 'all')
   filter = signal<Filter>('all');
 
   total = computed(() => this.todos().length);
   remaining = computed(() => this.todos().filter(t => !t.done).length);
 
-  // computed qui dépend de deux signaux : todos() et filter()
   filteredTodos = computed(() => {
     const f = this.filter();
     const list = this.todos();
@@ -39,6 +36,27 @@ export class App {
     if (f === 'done') return list.filter(t => t.done);
     return list;
   });
+
+  constructor() {
+    // Charger depuis localStorage au démarrage
+    const stored = localStorage.getItem('todos');
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored) as Todo[];
+        this.todos.set(parsed);
+        this.nextId = parsed.length > 0
+          ? Math.max(...parsed.map(t => t.id)) + 1
+          : 0;
+      } catch {
+        // JSON invalide -> on ignore, on repart de zéro
+      }
+    }
+
+    // Sauvegarder automatiquement à chaque changement de todos
+    effect(() => {
+      localStorage.setItem('todos', JSON.stringify(this.todos()));
+    });
+  }
 
   addTodo() {
     if (this.newTodo.trim()) {
@@ -60,7 +78,6 @@ export class App {
     );
   }
 
-  // Méthode pour changer le filtre
   setFilter(newFilter: Filter) {
     this.filter.set(newFilter);
   }

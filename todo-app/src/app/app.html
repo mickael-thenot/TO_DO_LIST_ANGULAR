@@ -15,10 +15,24 @@
     <p class="counter">
       {{ remaining() }} tâche(s) restante(s) sur {{ total() }}
     </p>
+    <div class="filters">
+      <button
+        [class.active]="filter() === 'all'"
+        (click)="setFilter('all')"
+      >Toutes</button>
+      <button
+        [class.active]="filter() === 'active'"
+        (click)="setFilter('active')"
+      >Actives</button>
+      <button
+        [class.active]="filter() === 'done'"
+        (click)="setFilter('done')"
+      >Terminées</button>
+    </div>
   }
 
   <ul class="todo-list">
-    @for (todo of todos(); track todo.id) {
+    @for (todo of filteredTodos(); track todo.id) {
       <li [class.done]="todo.done">
         <div class="todo-content">
           <input
@@ -31,7 +45,15 @@
         <button class="delete-btn" (click)="removeTodo(todo.id)">X</button>
       </li>
     } @empty {
-      <li class="empty-state">Aucune tâche pour le moment. Ajoutez-en une !</li>
+      <li class="empty-state">
+        @if (filter() === 'all') {
+          Aucune tâche pour le moment. Ajoutez-en une !
+        } @else if (filter() === 'active') {
+          Aucune tâche active. Bravo, tout est fait !
+        } @else {
+          Aucune tâche terminée pour l'instant.
+        }
+      </li>
     }
   </ul>
 </div>

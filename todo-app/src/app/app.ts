@@ -8,6 +8,9 @@ export interface Todo {
   done: boolean;
 }
 
+// Type pour les filtres possibles
+export type Filter = 'all' | 'active' | 'done';
+
 @Component({
   imports: [RouterOutlet, FormsModule],
   selector: 'app-root',
@@ -22,9 +25,20 @@ export class App {
   newTodo = '';
   private nextId = 0;
 
-  // Signaux dérivés - recalculés automatiquement quand todos() change
+  // Nouveau signal : le filtre actif (valeur par défaut : 'all')
+  filter = signal<Filter>('all');
+
   total = computed(() => this.todos().length);
   remaining = computed(() => this.todos().filter(t => !t.done).length);
+
+  // computed qui dépend de deux signaux : todos() et filter()
+  filteredTodos = computed(() => {
+    const f = this.filter();
+    const list = this.todos();
+    if (f === 'active') return list.filter(t => !t.done);
+    if (f === 'done') return list.filter(t => t.done);
+    return list;
+  });
 
   addTodo() {
     if (this.newTodo.trim()) {
@@ -44,5 +58,10 @@ export class App {
     this.todos.update(current =>
       current.map(t => t.id === id ? { ...t, done: !t.done } : t)
     );
+  }
+
+  // Méthode pour changer le filtre
+  setFilter(newFilter: Filter) {
+    this.filter.set(newFilter);
   }
 }

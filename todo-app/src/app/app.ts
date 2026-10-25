@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, computed } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
@@ -21,6 +21,10 @@ export class App {
   todos = signal<Todo[]>([]);
   newTodo = '';
   private nextId = 0;
+
+  // Signaux dérivés - recalculés automatiquement quand todos() change
+  total = computed(() => this.todos().length);
+  remaining = computed(() => this.todos().filter(t => !t.done).length);
 
   addTodo() {
     if (this.newTodo.trim()) {

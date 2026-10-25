@@ -11,6 +11,12 @@
     <button (click)="addTodo()" [disabled]="!newTodo.trim()">Ajouter</button>
   </div>
 
+  @if (total() > 0) {
+    <p class="counter">
+      {{ remaining() }} tâche(s) restante(s) sur {{ total() }}
+    </p>
+  }
+
   <ul class="todo-list">
     @for (todo of todos(); track todo.id) {
       <li [class.done]="todo.done">

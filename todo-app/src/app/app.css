@@ -74,3 +74,11 @@
   color: #888;
   padding: 20px;
 }
+
+.counter {
+  text-align: center;
+  color: #555;
+  font-size: 0.9em;
+  margin: 0 0 10px 0;
+  font-weight: 500;
+}

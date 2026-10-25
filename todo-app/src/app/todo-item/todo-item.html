@@ -1,0 +1,11 @@
+<li [class.done]="todo().done">
+  <div class="todo-content">
+    <input
+    type="checkbox"
+    [checked]="todo().done"
+    (change)="toggle.emit(todo().id)"
+    />
+    <span>{{ todo().text }}</span>
+  </div>
+  <button class="delete-btn" (click)="remove.emit(todo().id)">X</button>
+</li>

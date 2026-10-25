@@ -33,17 +33,11 @@
 
   <ul class="todo-list">
     @for (todo of filteredTodos(); track todo.id) {
-      <li [class.done]="todo.done">
-        <div class="todo-content">
-          <input
-            type="checkbox"
-            [checked]="todo.done"
-            (change)="toggleTodo(todo.id)"
-          />
-          <span>{{ todo.text }}</span>
-        </div>
-        <button class="delete-btn" (click)="removeTodo(todo.id)">X</button>
-      </li>
+      <app-todo-item
+        [todo]="todo"
+        (toggle)="toggleTodo($event)"
+        (remove)="removeTodo($event)"
+      />
     } @empty {
       <li class="empty-state">
         @if (filter() === 'all') {

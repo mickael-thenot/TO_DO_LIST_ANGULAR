@@ -1,6 +1,7 @@
 import { Component, signal, computed, effect } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { TodoItem } from './todo-item/todo-item';
 
 export interface Todo {
   id: number;
@@ -11,9 +12,8 @@ export interface Todo {
 export type Filter = 'all' | 'active' | 'done';
 
 @Component({
-  imports: [RouterOutlet, FormsModule],
+  imports: [RouterOutlet, FormsModule, TodoItem],
   selector: 'app-root',
-  standalone: true,
   styleUrl: './app.css',
   templateUrl: './app.html',
 })
